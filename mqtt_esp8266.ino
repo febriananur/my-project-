@@ -109,8 +109,8 @@ void reconnect() {
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish("sensor1", "deteksi :");
-      client.publish("sensor2", "kondisi :");
+      client.publish("sensor1","");
+      client.publish("sensor2","");
       
     } else {
       Serial.print("failed, rc=");
@@ -173,35 +173,62 @@ int val = digitalRead(limitSwitch);
        state = val;
        
 //       Serial.print("Terdeteksi = ");
-       if( state == 0){
-         Servo1.write(0);     
+       if( state == 0 && distance <=100 ){
+         Servo1.write(90);     
          client.publish("sensor1", "sampah elektronik");
+         client.publish("sensor2", "penuh");
+//         Serial.println("p");
          Serial.println( "sampah elektrtonik" );
-
-         delay(1000);}
-       else{
-         Servo1.write(90);
-         client.publish("sensor1", "stanby");
-         Serial.println( "Stanby");
-//         
          delay(1000);
-       }
+         }
+       else if( state == 0 && distance >=200 ){
+         Servo1.write(90);
+        
+         client.publish("sensor1", "sampah elektronik");        
+         client.publish("sensor2", "kosong");
+         Serial.println( "sampah elektronik");
+          delay(1000);
+        }
+      else if( state == 1 && distance <=100 ){
+         Servo1.write(0);
+       
+         client.publish("sensor1", "non elektronik");        
+         client.publish("sensor2", "penuh");
+         Serial.println( "non elektronik");
+           delay(1000);
+        }
+        
+      else if( state == 1 && distance >=200 ){
+         Servo1.write(0);
+         delay(1000);
+         client.publish("sensor1", "non elekrtonik");        
+         client.publish("sensor2", "kosong");
+         Serial.println( "non elektronik");
+      delay(1000);
+        }
+      else{
+            
+        }  
     }
+
+
+
+    
 //deteksi kapasitas
-
-      if (distance <=100)
-      {
-          client.publish("sensor2", "penuh");
-            Serial.println("p");
-      }
-      else (distance >= 200);
-      {
-        client.publish("sensor2", "");
-        Serial.println("");
-      }
-
-
-delay(250);
+//
+//      if (distance <=100)
+//      {
+//          client.publish("sensor2", "penuh");
+//            Serial.println("p");
+//      }
+//      else (distance >= 200);
+//      {
+//        client.publish("sensor2", "");
+//        Serial.println("");
+//      }
+//
+//
+//delay(250);
 
 
 
